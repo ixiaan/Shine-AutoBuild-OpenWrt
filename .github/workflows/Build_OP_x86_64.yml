@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_x86_64
+name: Build_x86_64_sekisui
 
 # Add a button to trigger the workflow
 on: 
@@ -57,6 +57,8 @@ jobs:
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
         echo "src-git ssrp https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
+        echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
+        sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_generate
         
     - name: Update & Install feeds
       working-directory: ./openwrt
@@ -75,10 +77,25 @@ jobs:
     #  working-directory: ./openwrt
     #  run: |
     #    git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon-jerrykuku
+    - name: More App
+      run: |
+        cd openwrt/package/feeds/luci
+        rm -rf luci-app-xlnetacc/
+        rm -rf luci-theme-argon
+        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
+        git clone https://github.com/ixiaan/luci-app-xlnetacc.git
+        git clone https://github.com/MapesxGM/luci-app-eqos.git
+        git clone https://github.com/kiddin9/luci-theme-edge.git
+        git clone https://github.com/jerrykuku/lua-maxminddb.git
+        git clone https://github.com/jerrykuku/luci-app-vssr.git  
+        # git clone https://github.com/garypang13/luci-app-xlnetacc.git
+        # git clone https://github.com/kiddin9/luci-app-xlnetacc.git
+        # git clone https://github.com/small-5/luci-app-xlnetacc.git
+        # git clone https://github.com/rufengsuixing/luci-app-adguardhome.git
 
     - name: Configuration Customization - Build_x86_64
       env:
-        CONFIG_FILE: 'x86_64.config'
+        CONFIG_FILE: 'sekisui.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x ./customize.sh && ./customize.sh
