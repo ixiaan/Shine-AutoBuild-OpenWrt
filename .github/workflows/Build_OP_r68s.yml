@@ -93,7 +93,7 @@ jobs:
         # git clone https://github.com/small-5/luci-app-xlnetacc.git
         # git clone https://github.com/rufengsuixing/luci-app-adguardhome.git
 
-    - name: Configuration Customization - Build_x86_64
+    - name: Configuration Customization - Build_r68s
       env:
         CONFIG_FILE: 'r68s.config'
       run: |
