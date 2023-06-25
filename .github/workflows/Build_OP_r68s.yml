@@ -80,7 +80,7 @@ jobs:
     - name: More App
       run: |
         cd openwrt/package/feeds/luci
-        rm -rf luci-app-xlnetacc/
+        rm -rf luci-app-xlnetacc
         rm -rf luci-theme-argon
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
         git clone https://github.com/ixiaan/luci-app-xlnetacc.git
