@@ -56,15 +56,16 @@ jobs:
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
-        echo "src-git ssrp https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
+        echo "src-git helloword https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
         echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
         sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_generate
+        sed -i "s/hostname='OpenWrt'/hostname='Sekisui'/g" package/base-files/files/bin/config_generate
+        sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='OpenWrt By AnnShine $(date +"%Y%m%d")'/g" package/base-files/files/etc/openwrt_release
         
     - name: Update & Install feeds
       working-directory: ./openwrt
       run: |
         ./scripts/feeds update -a
-        ./scripts/feeds install -a
         ./scripts/feeds install -a
 
     #- name: Import external feeds - passwall
@@ -87,7 +88,8 @@ jobs:
         git clone https://github.com/MapesxGM/luci-app-eqos.git
         git clone https://github.com/kiddin9/luci-theme-edge.git
         git clone https://github.com/jerrykuku/lua-maxminddb.git
-        git clone https://github.com/jerrykuku/luci-app-vssr.git  
+        git clone https://github.com/jerrykuku/luci-app-vssr.git
+        git clone https://github.com/xiaorouji/openwrt-passwall2
         # git clone https://github.com/garypang13/luci-app-xlnetacc.git
         # git clone https://github.com/kiddin9/luci-app-xlnetacc.git
         # git clone https://github.com/small-5/luci-app-xlnetacc.git
