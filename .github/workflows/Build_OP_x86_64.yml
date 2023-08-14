@@ -113,11 +113,73 @@ jobs:
     - name: Build firmware
       working-directory: ./openwrt
       run: |
-        echo -e "$(nproc) thread build."
+        echo -e "$(nproc) thread compile"
         make -j$(nproc) V=s
+        echo "status=success" >> $GITHUB_OUTPUT
 
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
         name: OpenWrt
-        path: openwrt/bin
+        path: openwrt/bin/targets/x86/64
+
+
+
+    - name: 整理固件
+      id: organize
+      run: |
+        # 整理固件包时候,删除您不想要的固件或者文件,让它不需要上传到Actions空间
+        cd openwrt/bin/targets/*/*
+        rm -rf packages
+        rm -rf version.buildinfo
+        rm -rf profiles.json
+        rm -rf *kernel*
+        rm -rf *.manifest
+        rm -rf sha256sums
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: 上传固件到Github Action空间
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      with:
+        name: ${{ env.FIRMWARE_VERSION }}-OpenWrt-Sekisui-amd64
+        path: ${{ env.FIRMWARE }}
+
+    - name: 创建release标签
+      id: tag
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        release_tag="${{ env.FIRMWARE_VERSION }}-OpenWrt-Sekisui-amd64"
+        echo "编译时间：$(date +'%Y年%m月%d日 %H点%M分')" >> release.txt
+        echo "默认网关：192.168.10.1" >> release.txt
+        echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
+        echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: 将固件上传到release
+      uses: softprops/action-gh-release@v1
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: ${{ env.FIRMWARE_VERSION }}-OpenWrt-Sekisui-amd64
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: ${{ env.FIRMWARE }}/*
+
+   
+
+    - name: 删除工作流运行
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 5
+
+    - name: 删除旧的releases
+      uses: dev-drprasad/delete-older-releases@v0.1.0
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 30
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
