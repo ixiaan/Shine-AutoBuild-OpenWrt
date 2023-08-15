@@ -24,6 +24,8 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        echo "FIRMWARE_VERSION=$(date +"%y%m%d")" >> $GITHUB_ENV
+        echo "START_DATE=$(date +'%Y年%m月%d日 %H点%M分%S秒')" >> $GITHUB_ENV
         set +e
         docker rmi `docker images -q`
         echo "Deleting files, please wait ..."
@@ -136,6 +138,8 @@ jobs:
         rm -rf *kernel*
         rm -rf *.manifest
         rm -rf sha256sums
+        mv *rootfs.img.gz ${{ env.FIRMWARE_VERSION }}-Sekisui-openwrt-x86-64-generic-squashfs-rootfs.img.gz
+        mv *combined-efi.img.gz ${{ env.FIRMWARE_VERSION }}-Sekisui-openwrt-x86-64-generic-squashfs-combined-efi.img.gz
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
