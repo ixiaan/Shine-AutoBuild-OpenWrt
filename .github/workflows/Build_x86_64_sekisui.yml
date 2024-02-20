@@ -56,6 +56,7 @@ jobs:
       env: 
         REPO_URL: https://github.com/coolsnowwolf/lede
         REPO_BRANCH: master
+        FEEDS_CONF: feeds_config/lean.feeds.conf.default
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         [ -e $FEEDS_CONF ] && cp -r $FEEDS_CONF openwrt/feeds.conf.default
@@ -106,7 +107,7 @@ jobs:
     - name: Download package
       working-directory: ./openwrt
       run: |
-        make download -j$(nproc)
+        make download -j1
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
@@ -114,7 +115,7 @@ jobs:
       working-directory: ./openwrt
       run: |
         echo -e "$(nproc) thread compile"
-        make -j$(nproc) V=s
+        make -j1 V=s
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name : Upload artifact
