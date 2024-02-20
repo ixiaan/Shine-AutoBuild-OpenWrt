@@ -23,6 +23,7 @@ jobs:
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
+        FEEDS_CONF: feeds_config/lean.feeds.conf.default
       run: |
         echo "FIRMWARE_VERSION=$(date +"%y%m%d-%H")" >> $GITHUB_ENV
         echo "START_DATE=$(date +'%Y年%m月%d日 %H点%M分%S秒')" >> $GITHUB_ENV
@@ -57,11 +58,8 @@ jobs:
         REPO_BRANCH: master
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        [ -e $FEEDS_CONF ] && cp -r $FEEDS_CONF openwrt/feeds.conf.default
         cd openwrt
-        echo "src-git helloword https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
-        echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
-        echo "src-git PWpackages https://github.com/xiaorouji/openwrt-passwall.git;packages" >> feeds.conf.default
-        echo "src-git PWluci https://github.com/xiaorouji/openwrt-passwall.git;luci" >> feeds.conf.default
         sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_generate
         sed -i "s/hostname='OpenWrt'/hostname='Sekisui'/g" package/base-files/files/bin/config_generate
         sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='OpenWrt By AnnShine $(date +"%Y%m%d")'/g" package/base-files/files/etc/openwrt_release
@@ -84,11 +82,15 @@ jobs:
     #    git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon-jerrykuku
     - name: More App
       run: |
-        cd openwrt/package/feeds/luci
-        rm -rf luci-app-xlnetacc/
-        git clone https://github.com/ixiaan/luci-app-xlnetacc.git
-        git clone https://github.com/MapesxGM/luci-app-eqos.git
-        git clone https://github.com/kiddin9/luci-theme-edge.git
+        cd openwrt
+        rm -rf ./package/feeds/luci/luci-app-xlnetacc
+        git clone https://github.com/ixiaan/luci-app-xlnetacc.git ./package/custom_packages/luci-app-xlnetacc
+        # git clone https://github.com/MapesxGM/luci-app-eqos.git ./package/custom_packages/luci-app-eqos
+        git clone https://github.com/kiddin9/luci-theme-edge.git ./package/custom_packages/luci-theme-edge
+        rm -rf ./feeds/luci/applications/luci-app-mosdns/
+        rm -rf ./feeds/packages/net/mosdns/
+        rm -rf ./package/custom_packages/mosdns
+        git clone https://github.com/sbwml/luci-app-mosdns -b v5 ./package/custom_packages/mosdns
     
 
 
