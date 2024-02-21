@@ -87,8 +87,10 @@ jobs:
         cd openwrt
         rm -rf ./package/feeds/luci/luci-app-xlnetacc
         git clone https://github.com/ixiaan/luci-app-xlnetacc.git ./package/custom_packages/luci-app-xlnetacc
-        # git clone https://github.com/MapesxGM/luci-app-eqos.git ./package/custom_packages/luci-app-eqos
-        git clone https://github.com/kiddin9/luci-theme-edge.git ./package/custom_packages/luci-theme-edge
+        rm -rf ./feeds/luci/themes/luci-theme-argon
+        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git ./feeds/luci/themes/luci-theme-argon
+        rm -rf ./package/lean/luci-app-argon-config
+        git clone -b 18.06 https://github.com/jerrykuku/luci-app-argon-config.git ./package/lean/luci-app-argon-config
         rm -rf ./feeds/luci/applications/luci-app-mosdns/
         rm -rf ./feeds/packages/net/mosdns/
         rm -rf ./package/custom_packages/mosdns
