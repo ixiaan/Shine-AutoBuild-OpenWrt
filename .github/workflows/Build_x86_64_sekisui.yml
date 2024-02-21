@@ -77,6 +77,7 @@ jobs:
         cd openwrt
         rm -rf ./package/feeds/luci/luci-app-xlnetacc
         rm -rf ./package/feeds/luci/luci-app-openvpn-server
+        rm -rf ./feeds/luci/applications/luci-app-openvpn-server
         git clone https://github.com/ixiaan/luci-app-xlnetacc.git ./package/custom_packages/luci-app-xlnetacc
         git clone https://github.com/ixiaan/luci-app-openvpn-server.git ./package/custom_packages/luci-app-openvpn-server
         rm -rf ./feeds/luci/themes/luci-theme-argon
