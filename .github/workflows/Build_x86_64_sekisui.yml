@@ -178,8 +178,8 @@ jobs:
     - name: 删除工作流运行
       uses: GitRML/delete-workflow-runs@main
       with:
-        retain_days: 1
-        keep_minimum_runs: 5
+        retain_days: 600
+        keep_minimum_runs: 30
 
     - name: 删除旧的releases
       uses: dev-drprasad/delete-older-releases@v0.1.0
