@@ -126,8 +126,8 @@ jobs:
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: OpenWrt
-        path: openwrt/bin/targets/x86/64
+        name: OpenWrt-mt3000-UltraPure
+        path: openwrt/bin/targets/*/*
 
 
 
