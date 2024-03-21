@@ -145,9 +145,8 @@ jobs:
         rm -rf *kernel*
         rm -rf *.manifest
         rm -rf sha256sums
-        mv *SYSUPGRADE.IMG.GZ ${{ env.FIRMWARE_VERSION }}-MuzhiXu-openwrt-LUNZN_FASTRHINO-R68S-SQUASHFS-SYSUPGRADE.IMG.GZ
-        mv *ROOTFS.TAR.GZ ${{ env.FIRMWARE_VERSION }}-MuzhiXu-openwrt-LUNZN_FASTRHINO-R68S-ROOTFS.TAR.GZ
-        mv *kernel.bin ${{ env.FIRMWARE_VERSION }}-MuzhiXu-openwrt-rockchip-armv8-lunzn_fastrhino-r68s-initramfs-kernel.bin
+        mv *r68s-ext4-sysupgrade.img.gz ${{ env.FIRMWARE_VERSION }}-MuzhiXu-rockchip-armv8-fastrhino_r68s-ext4-sysupgrade.img.gz
+        mv *squashfs-sysupgrade.img.gz ${{ env.FIRMWARE_VERSION }}-MuzhiXu-openwrt-rockchip-armv8-fastrhino_r68s-squashfs-sysupgrade.img.gz
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
