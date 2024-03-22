@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_x86_64_sekisui-old
+name: Build_amd64_sekisui_testxlnet
 
 # Add a button to trigger the workflow
 on: 
@@ -20,34 +20,36 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
 
+    - name: 释放空间
+      uses: jlumbroso/free-disk-space@main
+      with:
+        tool-cache: true
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        docker-images: true
+        swap-storage: true  
+
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
+        FEEDS_CONF: feeds_config/lean.feeds.conf.default
       run: |
-        echo "FIRMWARE_VERSION=$(date +"%y%m%d")" >> $GITHUB_ENV
+        echo "FIRMWARE_VERSION=$(date +"%y%m%d-%H")" >> $GITHUB_ENV
         echo "START_DATE=$(date +'%Y年%m月%d日 %H点%M分%S秒')" >> $GITHUB_ENV
         set +e
         docker rmi `docker images -q`
         echo "Deleting files, please wait ..."
         sudo rm -rf \
           /usr/share/dotnet \
+          /usr/local/lib/android \
+          /opt/ghc \
           /etc/mysql \
           /etc/php
-        sudo -E apt-get -y purge \
-          azure-cli \
-          ghc* \
-          zulu* \
-          hhvm \
-          llvm* \
-          firefox \
-          google* \
-          dotnet* \
-          powershell \
-          openjdk* \
-          mysql* \
-          php*
+        sudo -E apt-get -y purge azure-cli* docker* ghc* zulu* hhvm* llvm* firefox* google* dotnet* aspnetcore* powershell* openjdk* adoptopenjdk* mysql* php* mongodb* moby* snap* || true
         sudo -E apt-get update
-        sudo -E apt-get -y install ack antlr3 aria2 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pip libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
+        sudo -E apt-get -y install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev qemu-img
         sudo -E apt-get -y autoremove --purge
         sudo -E apt-get clean
 
@@ -55,12 +57,13 @@ jobs:
       env: 
         REPO_URL: https://github.com/coolsnowwolf/lede
         REPO_BRANCH: master
+        FEEDS_CONF: feeds_config/lean.feeds.conf.default
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        [ -e $FEEDS_CONF ] && cp -r $FEEDS_CONF openwrt/feeds.conf.default
         cd openwrt
-        echo "src-git helloword https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
-        echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
         sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_generate
+        sed -i 's/255.255.255.0/255.255.254.0/g' package/base-files/files/bin/config_generate
         sed -i "s/hostname='OpenWrt'/hostname='Sekisui'/g" package/base-files/files/bin/config_generate
         sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='OpenWrt By AnnShine $(date +"%Y%m%d")'/g" package/base-files/files/etc/openwrt_release
         
@@ -82,33 +85,33 @@ jobs:
     #    git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon-jerrykuku
     - name: More App
       run: |
-        cd openwrt/package/feeds/luci
-        rm -rf luci-app-xlnetacc/
-        rm -rf luci-theme-argon
-        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
-        git clone https://github.com/ixiaan/luci-app-xlnetacc.git
-        git clone https://github.com/MapesxGM/luci-app-eqos.git
-        git clone https://github.com/kiddin9/luci-theme-edge.git
-        git clone https://github.com/jerrykuku/lua-maxminddb.git
-        git clone https://github.com/jerrykuku/luci-app-vssr.git
-        git clone https://github.com/xiaorouji/openwrt-passwall2
-        # git clone https://github.com/garypang13/luci-app-xlnetacc.git
-        # git clone https://github.com/kiddin9/luci-app-xlnetacc.git
-        # git clone https://github.com/small-5/luci-app-xlnetacc.git
-        # git clone https://github.com/rufengsuixing/luci-app-adguardhome.git
+        cd openwrt
+        #rm -rf ./package/feeds/luci/luci-app-xlnetacc/
+        #rm -rf ./feeds/luci/applications/luci-app-xlnetacc/
+        #git clone https://github.com/ixiaan/luci-app-xlnetacc.git ./package/custom_packages/luci-app-xlnetacc
+        rm -rf ./feeds/luci/themes/luci-theme-argon
+        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git ./feeds/luci/themes/luci-theme-argon
+        rm -rf ./package/lean/luci-app-argon-config
+        git clone -b 18.06 https://github.com/jerrykuku/luci-app-argon-config.git ./package/lean/luci-app-argon-config
+        rm -rf ./feeds/luci/applications/luci-app-mosdns/
+        rm -rf ./feeds/packages/net/mosdns/
+        rm -rf ./package/custom_packages/mosdns
+        git clone https://github.com/sbwml/luci-app-mosdns -b v5 ./package/custom_packages/mosdns
+    
+
 
     - name: Configuration Customization - Build_x86_64
       env:
         CONFIG_FILE: 'sekisui.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x ./customize.sh && ./customize.sh
+        # chmod +x ./customize.sh && ./customize.sh
         cd openwrt && make defconfig
         
     - name: Download package
       working-directory: ./openwrt
       run: |
-        make download -j$(nproc)
+        make download -j1
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
@@ -116,7 +119,7 @@ jobs:
       working-directory: ./openwrt
       run: |
         echo -e "$(nproc) thread compile"
-        make -j$(nproc) V=s
+        make -j1 V=s
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name : Upload artifact
@@ -154,7 +157,7 @@ jobs:
       id: tag
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        release_tag="${{ env.FIRMWARE_VERSION }}-OpenWrt-Sekisui-amd64"
+        release_tag="${{ env.FIRMWARE_VERSION }}-OpenWrt-Sekisui-amd64-xlnet-lean"
         echo "编译时间：$(date +'%Y年%m月%d日 %H点%M分')" >> release.txt
         echo "默认网关：192.168.10.1" >> release.txt
         echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
@@ -176,8 +179,8 @@ jobs:
     - name: 删除工作流运行
       uses: GitRML/delete-workflow-runs@main
       with:
-        retain_days: 1
-        keep_minimum_runs: 5
+        retain_days: 600
+        keep_minimum_runs: 30
 
     - name: 删除旧的releases
       uses: dev-drprasad/delete-older-releases@v0.1.0
