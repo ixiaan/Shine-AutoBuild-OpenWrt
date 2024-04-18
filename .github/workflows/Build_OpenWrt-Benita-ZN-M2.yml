@@ -145,8 +145,9 @@ jobs:
         rm -rf *kernel*
         rm -rf *.manifest
         rm -rf sha256sums
-        # mv *SQUASHFS-SYSUPGRADE.BIN ${{ env.FIRMWARE_VERSION }}-Benita-ZN-M2-SQUASHFS-SYSUPGRADE.BIN
-        # mv *SQUASHFS-FACTORY.UBI ${{ env.FIRMWARE_VERSION }}-Benita-ZN-M2-SQUASHFS-FACTORY.UBI
+        mv *squashfs-factory.ubi ${{ env.FIRMWARE_VERSION }}-Benita-ZN-M2-ax18-squashfs-factory.ubi
+        mv *uImage.itb ${{ env.FIRMWARE_VERSION }}-Benita-ZN-M2-ax18-initramfs-uImage.itb
+        mv *squashfs-sysupgrade.bin ${{ env.FIRMWARE_VERSION }}-Benita-ZN-M2-ax18-squashfs-sysupgrade.bin
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
