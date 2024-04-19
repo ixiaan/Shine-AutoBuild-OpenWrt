@@ -34,7 +34,6 @@ jobs:
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
-        FEEDS_CONF: feeds_config/lean.feeds.conf.default
       run: |
         echo "FIRMWARE_VERSION=$(date +"%y%m%d-%H")" >> $GITHUB_ENV
         echo "START_DATE=$(date +'%Y年%m月%d日 %H点%M分%S秒')" >> $GITHUB_ENV
@@ -65,7 +64,7 @@ jobs:
         cd openwrt
         sed -i 's/192.168.1.1/192.168.9.1/g' package/base-files/files/bin/config_generate
         sed -i 's/255.255.255.0/255.255.254.0/g' package/base-files/files/bin/config_generate
-        sed -i "s/hostname='OpenWrt'/hostname='Butterfly'/g" package/base-files/files/bin/config_generate
+        sed -i "s/hostname='OpenWrt'/hostname='JiaShanXuJing'/g" package/base-files/files/bin/config_generate
         sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='OpenWrt By AnnShine $(date +"%Y%m%d")'/g" package/base-files/files/etc/openwrt_release
         
     - name: Update & Install feeds
@@ -87,18 +86,11 @@ jobs:
     - name: More App
       run: |
         cd openwrt
-        rm -rf feeds/packages/lang/golang
-        git clone https://github.com/sbwml/packages_lang_golang -b 20.x feeds/packages/lang/golang
-        rm -rf ./feeds/luci/applications/luci-app-mosdns/
-        rm -rf ./feeds/packages/net/mosdns/
-        rm -rf ./package/custom_packages/mosdns
+        #rm -rf feeds/packages/lang/golang
+        #git clone https://github.com/sbwml/packages_lang_golang -b 20.x feeds/packages/lang/golang
+        rm -rf feeds/packages/net/v2ray-geodata
         git clone https://github.com/sbwml/luci-app-mosdns -b v5 ./package/custom_packages/mosdns
-        rm -rf ./package/feeds/luci/luci-app-xlnetacc/
-        rm -rf ./feeds/luci/applications/luci-app-xlnetacc/
-        git clone https://github.com/ixiaan/luci-app-xlnetacc.git ./package/custom_packages/luci-app-xlnetacc
-        rm -rf ./feeds/luci/themes/luci-theme-argon/
-        git clone https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
-        rm -rf package/luci-theme-argon/README* package/luci-theme-argon/Screenshots/
+        git clone https://github.com/sbwml/v2ray-geodata ./package/custom_packages/v2ray-geodata
     
 
 
