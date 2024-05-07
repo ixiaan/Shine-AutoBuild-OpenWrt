@@ -86,9 +86,9 @@ jobs:
     - name: More App
       run: |
         cd openwrt
-        rm -rf ./package/feeds/luci/luci-app-xlnetacc/
-        rm -rf ./feeds/luci/applications/luci-app-xlnetacc/
-        git clone https://github.com/ixiaan/luci-app-xlnetacc.git ./package/custom_packages/luci-app-xlnetacc
+        #rm -rf ./package/feeds/luci/luci-app-xlnetacc/
+        #rm -rf ./feeds/luci/applications/luci-app-xlnetacc/
+        #git clone https://github.com/ixiaan/luci-app-xlnetacc.git ./package/custom_packages/luci-app-xlnetacc
         rm -rf ./feeds/luci/themes/luci-theme-argon
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git ./feeds/luci/themes/luci-theme-argon
         rm -rf ./package/lean/luci-app-argon-config
