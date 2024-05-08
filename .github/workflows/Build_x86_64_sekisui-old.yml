@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_amd64_sekisui_testxlnet
+name: Build_amd64_sekisui_testtailscale
 
 # Add a button to trigger the workflow
 on: 
@@ -97,12 +97,12 @@ jobs:
         rm -rf ./feeds/packages/net/mosdns/
         rm -rf ./package/custom_packages/mosdns
         git clone https://github.com/sbwml/luci-app-mosdns -b v5 ./package/custom_packages/mosdns
-    
+        git clone https://github.com/asvow/luci-app-tailscale package/luci-app-tailscale ./package/custom_packages/tailscale
 
 
     - name: Configuration Customization - Build_x86_64
       env:
-        CONFIG_FILE: 'sekisui.config'
+        CONFIG_FILE: 'sekisui-tailscale.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         # chmod +x ./customize.sh && ./customize.sh
@@ -157,7 +157,7 @@ jobs:
       id: tag
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        release_tag="${{ env.FIRMWARE_VERSION }}-OpenWrt-Sekisui-amd64-xlnet-lean"
+        release_tag="${{ env.FIRMWARE_VERSION }}-OpenWrt-Sekisui-amd64-tailscale"
         echo "编译时间：$(date +'%Y年%m月%d日 %H点%M分')" >> release.txt
         echo "默认网关：192.168.10.1" >> release.txt
         echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
