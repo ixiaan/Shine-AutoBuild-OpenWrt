@@ -97,7 +97,7 @@ jobs:
         rm -rf ./feeds/packages/net/mosdns/
         rm -rf ./package/custom_packages/mosdns
         git clone https://github.com/sbwml/luci-app-mosdns -b v5 ./package/custom_packages/mosdns
-        git clone https://github.com/asvow/luci-app-tailscale package/luci-app-tailscale ./package/custom_packages/tailscale
+        git clone https://github.com/asvow/luci-app-tailscale ./package/custom_packages/tailscale
 
 
     - name: Configuration Customization - Build_x86_64
