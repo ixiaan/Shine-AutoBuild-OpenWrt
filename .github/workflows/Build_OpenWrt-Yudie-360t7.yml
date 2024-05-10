@@ -95,9 +95,9 @@ jobs:
     
 
 
-    - name: Configuration Customization - Build_JiaShan-360t7
+    - name: Configuration Customization - Build_YuDie-360t7
       env:
-        CONFIG_FILE: 'JiaShan-360t7.config'
+        CONFIG_FILE: 'YuDie-360t7.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         # chmod +x ./customize.sh && ./customize.sh
@@ -120,7 +120,7 @@ jobs:
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: OpenWrt-JiaShan-360t7
+        name: OpenWrt-YuDie-360t7
         path: openwrt/bin/targets/*/*
 
 
@@ -164,7 +164,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: ${{ env.FIRMWARE_VERSION }}-OpenWrt-JiaShan-360t7
+        name: ${{ env.FIRMWARE_VERSION }}-OpenWrt-YuDie-360t7
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
