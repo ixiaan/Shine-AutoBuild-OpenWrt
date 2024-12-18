@@ -89,16 +89,19 @@ jobs:
         #rm -rf ./package/feeds/luci/luci-app-xlnetacc/
         #rm -rf ./feeds/luci/applications/luci-app-xlnetacc/
         #git clone https://github.com/ixiaan/luci-app-xlnetacc.git ./package/custom_packages/luci-app-xlnetacc
+        find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+        find ./ | grep Makefile | grep mosdns | xargs rm -f
+        rm -rf ./feeds/luci/applications/luci-app-mosdns/
+        rm -rf ./feeds/packages/net/mosdns/
+        rm -rf ./package/custom_packages/mosdns
+        git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+        git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
         rm -rf ./feeds/luci/themes/luci-theme-argon
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git ./feeds/luci/themes/luci-theme-argon
         rm -rf ./package/lean/luci-app-argon-config
         git clone -b 18.06 https://github.com/jerrykuku/luci-app-argon-config.git ./package/lean/luci-app-argon-config
-        rm -rf ./feeds/luci/applications/luci-app-mosdns/
-        rm -rf ./feeds/packages/net/mosdns/
-        rm -rf ./package/custom_packages/mosdns
-        git clone https://github.com/sbwml/luci-app-mosdns -b v5 ./package/custom_packages/mosdns
-    
-
+        sed -i '/\/etc\/init\.d\/tailscale/d;/\/etc\/config\/tailscale/d;' feeds/packages/net/tailscale/Makefile
+        git clone https://github.com/asvow/luci-app-tailscale package/luci-app-tailscale
 
     - name: Configuration Customization - Build_x86_64
       env:
