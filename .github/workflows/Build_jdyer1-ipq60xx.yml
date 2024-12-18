@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_qualcommax-ipq60xx_j d
+name: Build_qualcommax-ipq60xx_jdyer1
 
 # Add a button to trigger the workflow
 on: 
@@ -64,7 +64,7 @@ jobs:
         cd openwrt
         sed -i 's/192.168.1.1/192.168.16.1/g' package/base-files/files/bin/config_generate
         sed -i 's/255.255.255.0/255.255.254.0/g' package/base-files/files/bin/config_generate
-        sed -i "s/hostname='OpenWrt'/hostname='jdy'/g" package/base-files/files/bin/config_generate
+        sed -i "s/hostname='OpenWrt'/hostname='Taiyi'/g" package/base-files/files/bin/config_generate
         sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='OpenWrt By AnnShine $(date +"%Y%m%d")'/g" package/base-files/files/etc/openwrt_release
         
     - name: Update & Install feeds
