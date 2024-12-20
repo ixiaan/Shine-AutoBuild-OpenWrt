@@ -144,9 +144,10 @@ jobs:
         rm -rf *kernel*
         rm -rf *.manifest
         rm -rf sha256sums
-        mv *squashfs-factory.ubi ${{ env.FIRMWARE_VERSION }}-jdyer1-qualcommax-ipq60xx-jdcloud_re-cs-07-squashfs-factory
-        mv *uImage.itb ${{ env.FIRMWARE_VERSION }}-jdyer1-qualcommax-ipq60xx-jdcloud_re-cs-07-initramfs-uImage.itb
-        mv *squashfs-sysupgrade.bin ${{ env.FIRMWARE_VERSION }}-jdyer1-qualcommax-ipq60xx-jdcloud_re-cs-07-squashfs-sysupgrade.bin
+        mv *initramfs-uImage.itb ${{ env.FIRMWARE_VERSION }}-qualcommax-ipq60xx-jdcloud_re-cs-07-initramfs-uImage.itb
+        mv *squashfs-factory.bin ${{ env.FIRMWARE_VERSION }}-qualcommax-ipq60xx-jdcloud_re-cs-07-squashfs-factory.bin
+        mv *squashfs-recovery.bin ${{ env.FIRMWARE_VERSION }}-qualcommax-ipq60xx-jdcloud_re-cs-07-squashfs-recovery.bin
+        mv *squashfs-sysupgrade.bin ${{ env.FIRMWARE_VERSION }}-qualcommax-ipq60xx-jdcloud_re-cs-07-squashfs-sysupgrade.bin
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
