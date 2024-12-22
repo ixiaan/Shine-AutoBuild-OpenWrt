@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_qualcommax-ipq60xx_jdyer1
+name: Build_qualcommax-ipq60xx_jdyer1-docker
 
 # Add a button to trigger the workflow
 on: 
@@ -102,7 +102,7 @@ jobs:
 
     - name: Configuration Customization - Build_jdyer1
       env:
-        CONFIG_FILE: 'jdyer1.config'
+        CONFIG_FILE: 'er1docker.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         # chmod +x ./customize.sh && ./customize.sh
@@ -159,7 +159,7 @@ jobs:
       id: tag
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        release_tag="${{ env.FIRMWARE_VERSION }}-OpenWrt-jdyer1-qualcommax-ipq60xx"
+        release_tag="${{ env.FIRMWARE_VERSION }}-OpenWrt-jdyer1-qualcommax-ipq60xx-docker"
         echo "编译时间：$(date +'%Y年%m月%d日 %H点%M分')" >> release.txt
         echo "默认网关：192.168.16.1" >> release.txt
         echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
