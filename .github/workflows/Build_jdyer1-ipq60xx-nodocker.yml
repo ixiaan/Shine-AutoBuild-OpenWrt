@@ -162,6 +162,7 @@ jobs:
         release_tag="${{ env.FIRMWARE_VERSION }}-OpenWrt-jdyer1-qualcommax-ipq60xx-nodocker"
         echo "编译时间：$(date +'%Y年%m月%d日 %H点%M分')" >> release.txt
         echo "默认网关：192.168.16.1" >> release.txt
+        echo "插件：没docker、passwall、ssr、mosdns、ssr" >> release.txt
         echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
 
@@ -171,7 +172,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: ${{ env.FIRMWARE_VERSION }}-OpenWrt-jdyer1-qualcommax-ipq60xx
+        name: ${{ env.FIRMWARE_VERSION }}-OpenWrt-jdyer1-qualcommax-ipq60xx-nodocker
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
