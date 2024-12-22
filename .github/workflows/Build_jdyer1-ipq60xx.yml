@@ -172,7 +172,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: ${{ env.FIRMWARE_VERSION }}-OpenWrt-jdyer1-qualcommax-ipq60xx
+        name: ${{ env.FIRMWARE_VERSION }}-OpenWrt-jdyer1-qualcommax-ipq60xx-docker
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
