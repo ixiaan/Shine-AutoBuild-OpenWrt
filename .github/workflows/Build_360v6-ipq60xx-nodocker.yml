@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_qualcommax-ipq60xx_360v6-temp
+name: Build_qualcommax-360v6-ipq60xx-temp
 
 # Add a button to trigger the workflow
 on: 
@@ -34,7 +34,7 @@ jobs:
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
-        FEEDS_CONF: feeds_config/lean.feeds.conf.default
+        FEEDS_CONF: feeds_config/feeds.conf.default
       run: |
         echo "FIRMWARE_VERSION=$(date +"%y%m%d-%H")" >> $GITHUB_ENV
         echo "START_DATE=$(date +'%Y年%m月%d日 %H点%M分%S秒')" >> $GITHUB_ENV
@@ -92,15 +92,15 @@ jobs:
     #    git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon-jerrykuku
     - name: More App
       run: |
-        cd openwrt
-        find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
-        find ./ | grep Makefile | grep mosdns | xargs rm -f
-        git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-        git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-        rm -rf ./package/lean/luci-app-argon-config
-        git clone -b 18.06 https://github.com/jerrykuku/luci-app-argon-config.git ./package/lean/luci-app-argon-config
-        sed -i '/\/etc\/init\.d\/tailscale/d;/\/etc\/config\/tailscale/d;' feeds/packages/net/tailscale/Makefile
-        git clone https://github.com/asvow/luci-app-tailscale package/luci-app-tailscale
+        #cd openwrt
+        #find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+        #find ./ | grep Makefile | grep mosdns | xargs rm -f
+        #git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+        #git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+        #rm -rf ./package/lean/luci-app-argon-config
+        #git clone -b 18.06 https://github.com/jerrykuku/luci-app-argon-config.git ./package/lean/luci-app-argon-config
+        #sed -i '/\/etc\/init\.d\/tailscale/d;/\/etc\/config\/tailscale/d;' feeds/packages/net/tailscale/Makefile
+        #git clone https://github.com/asvow/luci-app-tailscale package/luci-app-tailscale
 
     - name: Configuration Customization - Build_360v6
       env:
