@@ -71,14 +71,14 @@ jobs:
         ./scripts/feeds update -a -f
         ./scripts/feeds install -a -f
         sed -i 's/192.168.1.1/192.168.32.1/g' package/base-files/files/bin/config_generate
-        sed -i 's/192.168.1.1/192.168.32.1/g' package/base-files/luci2/bin/config_generate
+        sed -i 's/192.168.1.1/192.168.32.1/g' package/base-files/luci/bin/config_generate
         sed -i 's/255.255.255.0/255.255.254.0/g' package/base-files/files/bin/config_generate
-        sed -i 's/255.255.255.0/255.255.254.0/g' package/base-files/luci2/bin/config_generate
+        sed -i 's/255.255.255.0/255.255.254.0/g' package/base-files/luci/bin/config_generate
         sed -i "s/hostname='OpenWrt'/hostname='sup-router'/g" package/base-files/files/bin/config_generate
-        sed -i "s/hostname='LEDE'/hostname='sup-router'/g" package/base-files/luci2/bin/config_generate
+        sed -i "s/hostname='LEDE'/hostname='sup-router'/g" package/base-files/luci/bin/config_generate
         sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='OpenWrt By AnnShine $(date +"%Y%m%d")'/g" package/base-files/files/etc/openwrt_release
         cat package/base-files/files/bin/config_generate
-        cat package/base-files/luci2/bin/config_generate
+        cat package/base-files/luci/bin/config_generate
 
     #- name: Import external feeds - passwall
     #  working-directory: ./openwrt
