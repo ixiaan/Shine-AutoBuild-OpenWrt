@@ -58,7 +58,7 @@ jobs:
       env: 
         REPO_URL: https://github.com/coolsnowwolf/lede
         REPO_BRANCH: master
-        FEEDS_CONF: feeds_config/lean.feeds.conf.default
+        FEEDS_CONF: feeds_config/sup.feeds.conf.default
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         [ -e $FEEDS_CONF ] && cp -r $FEEDS_CONF openwrt/feeds.conf.default
