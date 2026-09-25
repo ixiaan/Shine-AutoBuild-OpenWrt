@@ -34,7 +34,7 @@ jobs:
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
-        FEEDS_CONF: feeds_config/lean.feeds.conf.default
+        FEEDS_CONF: feeds_config/my.feeds.conf.default
       run: |
         echo "FIRMWARE_VERSION=$(date +"%y%m%d-%H")" >> $GITHUB_ENV
         echo "START_DATE=$(date +'%Y年%m月%d日 %H点%M分%S秒')" >> $GITHUB_ENV
