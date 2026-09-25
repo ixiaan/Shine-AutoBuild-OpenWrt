@@ -93,14 +93,21 @@ jobs:
     - name: More App
       run: |
         cd openwrt
+        # mosdns 需要新版 golang，替换 feeds 自带的
+        rm -rf feeds/packages/lang/golang
+        git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+        # mosdns + v2ray-geodata（非官方源处理方式：先删自带再克隆）
         find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
         find ./ | grep Makefile | grep mosdns | xargs rm -f
         git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
         git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+        # argon 主题配置（Lean's LEDE 版）
         rm -rf ./package/lean/luci-app-argon-config
         git clone -b 18.06 https://github.com/jerrykuku/luci-app-argon-config.git ./package/lean/luci-app-argon-config
-        sed -i '/\/etc\/init\.d\/tailscale/d;/\/etc\/config\/tailscale/d;' feeds/packages/net/tailscale/Makefile
-        git clone https://github.com/asvow/luci-app-tailscale package/luci-app-tailscale
+        # tailscale 暂时停用
+        # sed -i '/\/etc\/init\.d\/tailscale/d;/\/etc\/config\/tailscale/d;' feeds/packages/net/tailscale/Makefile
+        # git clone https://github.com/asvow/luci-app-tailscale package/luci-app-tailscale
+        # passwall 通过 feeds 安装（feeds.conf.default 顶部已添加 passwall_packages / passwall_luci），无需在此克隆
 
     - name: Configuration Customization - Build_x86_64
       env:
