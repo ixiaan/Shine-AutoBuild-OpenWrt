@@ -14,7 +14,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # ubuntu-latest 将于 2026-10-19 起逐步迁移到 Ubuntu 26.04（BREAKING CHANGES），
+    # 先固定 24.04 保持构建稳定；验证 26.04 兼容后可改回 ubuntu-latest 或 ubuntu-26.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout
@@ -23,7 +25,7 @@ jobs:
     - name: Free disk space
       uses: jlumbroso/free-disk-space@main
       with:
-        tool-cache: true
+        preinstalled-runtimes: true
         android: true
         dotnet: true
         haskell: true
@@ -93,9 +95,10 @@ jobs:
     - name: More App
       run: |
         cd openwrt
-        # mosdns 需要新版 golang，替换 feeds 自带的
+        # xray-core / mosdns 需要新版 golang，替换 feeds 自带的
+        # xray-core 26.9.9 的 go.mod 要求 go >= 1.27，26.x 分支是 go1.26.8，必须升到 27.x（go1.27.1）
         rm -rf feeds/packages/lang/golang
-        git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+        git clone https://github.com/sbwml/packages_lang_golang -b 27.x feeds/packages/lang/golang
         # mosdns + v2ray-geodata（非官方源处理方式：先删自带再克隆）
         find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
         find ./ | grep Makefile | grep mosdns | xargs rm -f
