@@ -12,6 +12,15 @@ on:
   repository_dispatch:
   workflow_dispatch:
 
+# 删除工作流运行需要 actions: write，发布/删除 release 需要 contents: write
+permissions:
+  actions: write
+  contents: write
+
+env:
+  # 控制“删除旧 release”步骤是否执行
+  UPLOAD_RELEASE: 'true'
+
 jobs:
   build:
     # ubuntu-latest 将于 2026-10-19 起逐步迁移到 Ubuntu 26.04（BREAKING CHANGES），
@@ -176,7 +185,7 @@ jobs:
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -189,16 +198,37 @@ jobs:
    
 
     - name: Delete old workflow runs
-      uses: GitRML/delete-workflow-runs@main
+      uses: Mattraks/delete-workflow-runs@v2
       with:
+        token: ${{ secrets.GITHUB_TOKEN }}
         retain_days: 600
         keep_minimum_runs: 30
 
     - name: Delete old releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
+      uses: actions/github-script@v8
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 30
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const keepLatest = 30;
+          const { owner, repo } = context.repo;
+          const releases = await github.paginate(
+            github.rest.repos.listReleases,
+            { owner, repo, per_page: 100 }
+          );
+          // 按发布时间从新到旧排序，只保留最新的 keepLatest 个，其余连同 tag 一起删除
+          const toDelete = releases
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            .slice(keepLatest);
+          for (const release of toDelete) {
+            core.info(`删除 release: ${release.tag_name}`);
+            await github.rest.repos.deleteRelease({ owner, repo, release_id: release.id });
+            if (release.tag_name) {
+              try {
+                await github.rest.git.deleteRef({ owner, repo, ref: `tags/${release.tag_name}` });
+              } catch (error) {
+                core.warning(`删除 tag 失败 ${release.tag_name}: ${error.message}`);
+              }
+            }
+          }
+          core.info(`完成，共保留 ${Math.min(keepLatest, releases.length)} 个 release`);
